@@ -7,7 +7,4 @@
     "clang-analyzer-security.insecureAPI.*"
   ],
   "cmake.ignoreCMakeListsMissing": true,
-  "files.associations": {
-    "stdexcept": "cpp"
-  },
 }
