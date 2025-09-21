@@ -218,7 +218,6 @@ namespace mywheels {
       for (auto elm : v) {
         os << elm << ' ';
       }
-      os << '\n';
       return os;
     }
 
@@ -228,33 +227,49 @@ namespace mywheels {
       return static_cast<std::size_t>(m_values.size());
     }
 
-    friend Scalar dot(const Vector &l, const Vector &r) {
-      assert(l.dim() == r.dim());
-      return std::inner_product(l.begin(), l.end(), r.begin(), Scalar(0));
+    friend std::size_t dim(const Vector &v) {
+      return v.dim();
     }
 
-    friend Vector cross(const Vector &l, const Vector &r) {
-      assert(l.dim() == 3 && r.dim() == 3);
+    Scalar dot(const Vector &r) const {
+      assert(dim() == r.dim());
+      return std::inner_product(begin(), end(), r.begin(), Scalar(0));
+    }
+
+    friend Scalar dot(const Vector &l, const Vector &r) {
+      return l.dot(r);
+    }
+
+    Vector cross(const Vector &r) const {
+      assert(dim() == 3 && r.dim() == 3);
       Vector ret = Vector::zero(3);
-      ret[0] = l[1] * r[2] - l[2] * r[1];
-      ret[1] = l[2] * r[0] - l[0] * r[2];
-      ret[2] = l[0] * r[1] - l[1] * r[0];
+      ret[0] = (*this)[1] * r[2] - (*this)[2] * r[1];
+      ret[1] = (*this)[2] * r[0] - (*this)[0] * r[2];
+      ret[2] = (*this)[0] * r[1] - (*this)[1] * r[0];
       return ret;
     }
 
+    friend Vector cross(const Vector &l, const Vector &r) {
+      return l.cross(r);
+    }
+
     Scalar norm() const {
-      return sqrt(dot(*this, *this));
+      return sqrt(dot(*this));
     }
 
-    Vector normalized() const & {
-      assert(*this != Vector::zero(dim()));
-      return Vector(*this) /= norm();
+    friend Scalar norm(const Vector &v) {
+      return v.norm();
     }
 
-    Vector normalized() && {
+    Vector normalized() {
       assert(*this != Vector::zero(dim()));
       *this /= norm();
-      return std::move(*this);
+      return *this;
+    }
+
+    friend Vector normalized(const Vector &v) {
+      assert(v != Vector::zero(v.dim()));
+      return Vector(v) /= v.norm();
     }
 
     template<unsigned int P>
