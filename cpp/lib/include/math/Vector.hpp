@@ -9,6 +9,9 @@
 
 namespace mywheels {
   template<typename Scalar>
+  class Matrix;
+
+  template<typename Scalar>
   class Vector {
   private:
     std::vector<Scalar> m_values;
@@ -22,6 +25,12 @@ namespace mywheels {
 
     Vector(std::initializer_list<Scalar> list) : m_values(list) {};
 
+    // 型変換
+    operator Matrix<Scalar>() const {
+      Matrix<Scalar> ret(dim(), static_cast<std::size_t>(1));
+      std::copy(begin(), end(), ret.begin());
+      return ret;
+    }
 
     // イテレータ
 
@@ -43,21 +52,12 @@ namespace mywheels {
 
     // 演算子
 
-    Scalar &operator[](std::size_t i) {
-      return m_values[i];
-    }
-
-    const Scalar &operator[](std::size_t i) const {
-      return m_values[i];
-    }
-
-
     Scalar &operator()(std::size_t i) {
-      return m_values.at(i);
+      return m_values[i];
     }
 
     const Scalar &operator()(std::size_t i) const {
-      return m_values.at(i);
+      return m_values[i];
     }
 
 
@@ -72,12 +72,12 @@ namespace mywheels {
 
     Vector operator-() const & {
       Vector ret(*this);
-      std::transform(ret.begin(), ret.end(), ret.begin(), std::negate());
+      std::transform(ret.begin(), ret.end(), ret.begin(), std::negate<Scalar>());
       return ret;
     }
 
     Vector operator-() && {
-      std::transform(begin(), end(), begin(), std::negate());
+      std::transform(begin(), end(), begin(), std::negate<Scalar>());
       return std::move(*this);
     }
 
@@ -85,13 +85,13 @@ namespace mywheels {
 
     Vector &operator+=(const Vector &r) {
       assert(dim() == r.dim());
-      std::transform(begin(), end(), r.begin(), begin(), std::plus());
+      std::transform(begin(), end(), r.begin(), begin(), std::plus<Scalar>());
       return *this;
     }
 
     Vector &operator-=(const Vector &r) {
       assert(dim() == r.dim());
-      std::transform(begin(), end(), r.begin(), begin(), std::minus());
+      std::transform(begin(), end(), r.begin(), begin(), std::minus<Scalar>());
       return *this;
     }
 
@@ -128,7 +128,7 @@ namespace mywheels {
 
     friend Vector operator+(const Vector &l, Vector &&r) {
       assert(l.dim() == r.dim());
-      std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::plus());
+      std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::plus<Scalar>());
       return r;
     }
 
@@ -146,7 +146,7 @@ namespace mywheels {
 
     friend Vector operator-(const Vector &l, Vector &&r) {
       assert(l.dim() == r.dim());
-      std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::minus());
+      std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::minus<Scalar>());
       return std::move(r);
     }
 
@@ -242,10 +242,10 @@ namespace mywheels {
 
     Vector cross(const Vector &r) const {
       assert(dim() == 3 && r.dim() == 3);
-      Vector ret = Vector::zero(3);
-      ret[0] = (*this)[1] * r[2] - (*this)[2] * r[1];
-      ret[1] = (*this)[2] * r[0] - (*this)[0] * r[2];
-      ret[2] = (*this)[0] * r[1] - (*this)[1] * r[0];
+      Vector ret(static_cast<std::size_t>(3));
+      ret(0) = (*this)(1) * r(2) - (*this)(2) * r(1);
+      ret(1) = (*this)(2) * r(0) - (*this)(0) * r(2);
+      ret(2) = (*this)(0) * r(1) - (*this)(1) * r(0);
       return ret;
     }
 
@@ -261,10 +261,9 @@ namespace mywheels {
       return v.norm();
     }
 
-    Vector normalized() {
+    Vector normalize() {
       assert(*this != Vector::zero(dim()));
-      *this /= norm();
-      return *this;
+      return *this /= norm();
     }
 
     friend Vector normalized(const Vector &v) {
@@ -279,6 +278,12 @@ namespace mywheels {
         return sum + pow(abs(val), P);
       });
       return pow(ret, Scalar(1) / static_cast<Scalar>(P));
+    }
+
+    friend Matrix<Scalar> t(const Vector &v) {
+      Matrix<Scalar> ret(static_cast<std::size_t>(1), v.dim());
+      std::copy(v.begin(), v.end(), ret.begin());
+      return ret;
     }
 
     // 定数
