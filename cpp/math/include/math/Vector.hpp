@@ -60,7 +60,6 @@ namespace mywheels {
       return m_values[i];
     }
 
-
     // 単項演算子
     Vector operator+() const & {
       return Vector(*this);
