@@ -313,6 +313,193 @@ namespace mywheels {
       return ret;
     }
 
+    Matrix row(std::size_t ix) const {
+      assert(ix < m_rows);
+      Matrix ret(std::size_t(1), m_cols);
+      for (std::size_t j = 0; j < m_cols; j++) {
+        ret(0, j) = (*this)(ix, j);
+      }
+      return ret;
+    }
+
+    Matrix col(std::size_t xj) const {
+      assert(xj < m_cols);
+      Matrix ret(m_rows, std::size_t(1));
+      for (std::size_t i = 0; i < m_rows; i++) {
+        ret(i, 0) = (*this)(i, xj);
+      }
+      return ret;
+    }
+
+    Matrix concatenateRows(const Matrix &r) const & {
+      assert(m_cols == r.m_cols);
+      Matrix ret(m_rows + r.m_rows, m_cols);
+      std::copy(begin(), end(), ret.begin());
+      std::copy(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      return ret;
+    }
+
+    Matrix concatenateRows(Matrix &&r) const & {
+      assert(m_cols == r.m_cols);
+      Matrix ret(m_rows + r.m_rows, m_cols);
+      std::copy(begin(), end(), ret.begin());
+      std::move(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      return ret;
+    }
+
+    Matrix concatenateRows(const Matrix &r) && {
+      assert(m_cols == r.m_cols);
+      Matrix ret(m_rows + r.m_rows, m_cols);
+      std::move(begin(), end(), ret.begin());
+      std::copy(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      return ret;
+    }
+
+    Matrix concatenateRows(Matrix &&r) && {
+      assert(m_cols == r.m_cols);
+      Matrix ret(m_rows + r.m_rows, m_cols);
+      std::move(begin(), end(), ret.begin());
+      std::move(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      return ret;
+    }
+
+    Matrix concatenateCols(const Matrix &r) const & {
+      assert(m_rows == r.m_rows);
+      Matrix ret(m_rows, m_cols + r.m_cols);
+      for (std::size_t i = 0; i < m_rows; i++) {
+        for (std::size_t j = 0; j < m_cols; j++) {
+          ret(i, j) = (*this)(i, j);
+        }
+        for (std::size_t j = 0; j < r.m_cols; j++) {
+          ret(i, m_cols + j) = r(i, j);
+        }
+      }
+      return ret;
+    }
+
+    Matrix concatenateCols(Matrix &&r) const & {
+      assert(m_rows == r.m_rows);
+      Matrix ret(m_rows, m_cols + r.m_cols);
+      for (std::size_t i = 0; i < m_rows; i++) {
+        for (std::size_t j = 0; j < m_cols; j++) {
+          ret(i, j) = (*this)(i, j);
+        }
+        for (std::size_t j = 0; j < r.m_cols; j++) {
+          ret(i, m_cols + j) = std::move(r(i, j));
+        }
+      }
+      return ret;
+    }
+
+    Matrix concatenateCols(const Matrix &r) && {
+      assert(m_rows == r.m_rows);
+      Matrix ret(m_rows, m_cols + r.m_cols);
+      for (std::size_t i = 0; i < m_rows; i++) {
+        for (std::size_t j = 0; j < m_cols; j++) {
+          ret(i, j) = std::move((*this)(i, j));
+        }
+        for (std::size_t j = 0; j < r.m_cols; j++) {
+          ret(i, m_cols + j) = r(i, j);
+        }
+      }
+      return ret;
+    }
+
+    Matrix concatenateCols(Matrix &&r) && {
+      assert(m_rows == r.m_rows);
+      Matrix ret(m_rows, m_cols + r.m_cols);
+      for (std::size_t i = 0; i < m_rows; i++) {
+        for (std::size_t j = 0; j < m_cols; j++) {
+          ret(i, j) = std::move((*this)(i, j));
+        }
+        for (std::size_t j = 0; j < r.m_cols; j++) {
+          ret(i, m_cols + j) = std::move(r(i, j));
+        }
+      }
+      return ret;
+    }
+
+    // idx=0の時，上からn個，左からm個を取るようにブロックに分ける
+    // idx=1の時，idx=0の右のブロックを取る
+    // idx=2の時，idx=0の下のブロックを取る
+    // idx=3の時，idx=0の右下のブロックを取る
+    Matrix block(std::size_t n, std::size_t m, std::size_t idx) const & {
+      assert(n <= m_rows && m <= m_cols);
+      assert(idx == 0 || idx == 1 || idx == 2 || idx == 3);
+      if (idx == 0) {
+        Matrix ret(n, m);
+        for (std::size_t i = 0; i < n; i++) {
+          for (std::size_t j = 0; j < m; j++) {
+            ret(i, j) = (*this)(i, j);
+          }
+        }
+        return ret;
+      } else if (idx == 1) {
+        Matrix ret(n, m_cols - m);
+        for (std::size_t i = 0; i < n; i++) {
+          for (std::size_t j = 0; j < m_cols - m; j++) {
+            ret(i, j) = (*this)(i, m + j);
+          }
+        }
+        return ret;
+      } else if (idx == 2) {
+        Matrix ret(m_rows - n, m);
+        for (std::size_t i = 0; i < m_rows - n; i++) {
+          for (std::size_t j = 0; j < m; j++) {
+            ret(i, j) = (*this)(n + i, j);
+          }
+        }
+        return ret;
+      } else if (idx == 3) {
+        Matrix ret(m_rows - n, m_cols - m);
+        for (std::size_t i = 0; i < m_rows - n; i++) {
+          for (std::size_t j = 0; j < m_cols - m; j++) {
+            ret(i, j) = (*this)(n + i, m + j);
+          }
+        }
+        return ret;
+      }
+    }
+
+    Matrix block(std::size_t n, std::size_t m, std::size_t idx) && {
+      std::cout << "hoge" << std::endl;
+      assert(n <= m_rows && m <= m_cols);
+      assert(idx == 0 || idx == 1 || idx == 2 || idx == 3);
+      if (idx == 0) {
+        Matrix ret(n, m);
+        for (std::size_t i = 0; i < n; i++) {
+          for (std::size_t j = 0; j < m; j++) {
+            ret(i, j) = std::move((*this)(i, j));
+          }
+        }
+        return ret;
+      } else if (idx == 1) {
+        Matrix ret(n, m_cols - m);
+        for (std::size_t i = 0; i < n; i++) {
+          for (std::size_t j = 0; j < m_cols - m; j++) {
+            ret(i, j) = std::move((*this)(i, m + j));
+          }
+        }
+        return ret;
+      } else if (idx == 2) {
+        Matrix ret(m_rows - n, m);
+        for (std::size_t i = 0; i < m_rows - n; i++) {
+          for (std::size_t j = 0; j < m; j++) {
+            ret(i, j) = std::move((*this)(n + i, j));
+          }
+        }
+        return ret;
+      } else if (idx == 3) {
+        Matrix ret(m_rows - n, m_cols - m);
+        for (std::size_t i = 0; i < m_rows - n; i++) {
+          for (std::size_t j = 0; j < m_cols - m; j++) {
+            ret(i, j) = std::move((*this)(n + i, m + j));
+          }
+        }
+        return ret;
+      }
+    }
+
     // 定数
 
     static Matrix zero(std::size_t rows, std::size_t cols) {
@@ -331,4 +518,7 @@ namespace mywheels {
       return ret;
     }
   };
+
+  using Matf = Matrix<float>;
+  using Matd = Matrix<double>;
 } // namespace mywheels

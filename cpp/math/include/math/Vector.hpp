@@ -286,6 +286,64 @@ namespace mywheels {
       return ret;
     }
 
+    Vector concatenate(const Vector &r) const & {
+      Vector ret(dim() + r.dim());
+      std::copy(begin(), end(), ret.begin());
+      std::copy(r.begin(), r.end(), ret.begin() + dim());
+      return ret;
+    }
+
+    Vector concatenate(const Vector &r) && {
+      Vector ret(dim() + r.dim());
+      std::move(begin(), end(), ret.begin());
+      std::copy(r.begin(), r.end(), ret.begin() + dim());
+      return ret;
+    }
+
+    Vector concatenate(Vector &&r) const & {
+      Vector ret(dim() + r.dim());
+      std::copy(begin(), end(), ret.begin());
+      std::move(r.begin(), r.end(), ret.begin() + dim());
+      return ret;
+    }
+
+    Vector concatenate(Vector &&r) && {
+      Vector ret(dim() + r.dim());
+      std::move(begin(), end(), ret.begin());
+      std::move(r.begin(), r.end(), ret.begin() + dim());
+      return ret;
+    }
+
+    // idx=0の時，上からn個を取る
+    // idx=1の時，上からn個を除く
+    Vector block(std::size_t n, std::size_t idx) const & {
+      assert(n <= dim());
+      assert(idx == 0 || idx == 1);
+      if (idx == 0) {
+        Vector ret(n);
+        std::copy(begin(), begin() + n, ret.begin());
+        return ret;
+      } else if (idx == 1) {
+        Vector ret(dim() - n);
+        std::copy(begin() + n, end(), ret.begin());
+        return ret;
+      }
+    }
+
+    Vector block(std::size_t n, std::size_t idx) && {
+      assert(n <= dim());
+      assert(idx == 0 || idx == 1);
+      if (idx == 0) {
+        Vector ret(n);
+        std::move(begin(), begin() + n, ret.begin());
+        return ret;
+      } else if (idx == 1) {
+        Vector ret(dim() - n);
+        std::move(begin() + n, end(), ret.begin());
+        return ret;
+      }
+    }
+
     // 定数
 
     static Vector zero(std::size_t dim) {
@@ -301,4 +359,7 @@ namespace mywheels {
       return e;
     }
   };
+
+  using Vecf = Vector<float>;
+  using Vecd = Vector<double>;
 } // namespace mywheels

@@ -26,4 +26,12 @@ namespace mywheels {
     return std::fabs(x);
   }
 
+  float exp(float x) {
+    return std::exp(x);
+  }
+
+  double exp(double x) {
+    return std::exp(x);
+  }
+
 } // namespace mywheels
