@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyWheelsTest LANGUAGES CXX)
+project(MyWheelsDeepLearning LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -16,7 +16,7 @@ add_compile_options(
   -fdiagnostics-color=always
 )
 
-add_executable(test Main.cpp)
+add_executable(deep_learning src/Main.cpp)
 
 add_library(math STATIC IMPORTED)
 
@@ -25,4 +25,4 @@ set_target_properties(math PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/../lib/include"
 )
 
-target_link_libraries(test PRIVATE math)
+target_link_libraries(deep_learning PRIVATE math)
