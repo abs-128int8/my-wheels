@@ -3,6 +3,6 @@
 
   | Project Name | Version |
   | --- | --- |
-  | math | 0.1.0.0 |
-  | deep_learninng | 0.1.0.0 |
+  | cpp/math | 0.1.0.0 |
+  | cpp/deep_learninng | 0.1.0.0 |
 </details>
