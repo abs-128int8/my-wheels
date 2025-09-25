@@ -3,11 +3,12 @@
     {
       "name": "Linux",
       "includePath": [
-        "${workspaceFolder}/**",
+        "${workspaceFolder}/../math/**",
         "/usr/include/**"
       ],
       "defines": [
-        "_GNU_SOURCE"
+        "_GNU_SOURCE",
+        "_DEBUG"
       ],
       "compilerPath": "/usr/bin/clang++",
       "cStandard": "c17",
@@ -18,7 +19,7 @@
     {
       "name": "Win32",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/../**"
       ],
       "defines": [
         "_DEBUG",

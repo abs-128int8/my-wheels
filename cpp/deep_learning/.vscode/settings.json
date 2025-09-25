@@ -1,0 +1,12 @@
+{
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: LLVM, IndentWidth: 2, ColumnLimit: 120, AlignEscapedNewlines: Left, AllowShortEnumsOnASingleLine: false, AllowShortFunctionsOnASingleLine: None, AllowShortLambdasOnASingleLine: None, BreakBeforeBinaryOperators: NonAssignment, BreakConstructorInitializers: AfterColon, BreakInheritanceList: AfterComma, BreakStringLiterals: false, BreakTemplateDeclarations: Yes, ConstructorInitializerIndentWidth: 2, ContinuationIndentWidth: 2, IndentExternBlock: Indent, IndentPPDirectives: AfterHash, InsertBraces: true, JavaScriptQuotes: Double, MaxEmptyLinesToKeep: 2, NamespaceIndentation: All, SortIncludes: Never, SpaceAfterTemplateKeyword: false, SpacesInContainerLiterals: false}",
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+    "clang-analyzer-security.insecureAPI.*"
+  ],
+  "files.associations": {
+    "iostream": "cpp"
+  },
+}
