@@ -7,13 +7,13 @@
         "/usr/include/**"
       ],
       "defines": [
-        "_GNU_SOURCE"
+        "_GNU_SOURCE",
+        "_DEBUG"
       ],
       "compilerPath": "/usr/bin/clang++",
       "cStandard": "c17",
       "cppStandard": "c++17",
-      "intelliSenseMode": "linux-clang-x64",
-      "configurationProvider": "ms-vscode.cmake-tools"
+      "intelliSenseMode": "linux-clang-x64"
     },
     {
       "name": "Win32",
@@ -28,8 +28,7 @@
       "compilerPath": "",
       "cStandard": "c17",
       "cppStandard": "c++17",
-      "intelliSenseMode": "windows-msvc-x64",
-      "configurationProvider": "ms-vscode.cmake-tools"
+      "intelliSenseMode": "windows-msvc-x64"
     }
   ],
   "version": 4
