@@ -6,4 +6,6 @@
   "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
     "clang-analyzer-security.insecureAPI.*"
   ],
+  "cmake.configureOnEdit": false,
+  "cmake.configureOnOpen": false,
 }

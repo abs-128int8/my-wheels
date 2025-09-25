@@ -3,7 +3,8 @@
     {
       "name": "Linux",
       "includePath": [
-        "${workspaceFolder}/../math/**",
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/../math/include",
         "/usr/include/**"
       ],
       "defines": [
@@ -13,13 +14,13 @@
       "compilerPath": "/usr/bin/clang++",
       "cStandard": "c17",
       "cppStandard": "c++17",
-      "intelliSenseMode": "linux-clang-x64",
-      "configurationProvider": "ms-vscode.cmake-tools"
+      "intelliSenseMode": "linux-clang-x64"
     },
     {
       "name": "Win32",
       "includePath": [
-        "${workspaceFolder}/../**"
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/../math/include"
       ],
       "defines": [
         "_DEBUG",
@@ -29,8 +30,7 @@
       "compilerPath": "",
       "cStandard": "c17",
       "cppStandard": "c++17",
-      "intelliSenseMode": "windows-msvc-x64",
-      "configurationProvider": "ms-vscode.cmake-tools"
+      "intelliSenseMode": "windows-msvc-x64"
     }
   ],
   "version": 4
