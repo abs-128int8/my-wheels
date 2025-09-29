@@ -9,9 +9,6 @@
 
 namespace mywheels {
   template<typename Scalar>
-  class Matrix;
-
-  template<typename Scalar>
   class Vector {
   private:
     std::vector<Scalar> m_values;
@@ -25,11 +22,8 @@ namespace mywheels {
 
     Vector(std::initializer_list<Scalar> list) : m_values(list) {};
 
-    // 型変換
-    operator Matrix<Scalar>() const {
-      Matrix<Scalar> ret(dim(), static_cast<std::size_t>(1));
-      std::copy(begin(), end(), ret.begin());
-      return ret;
+    std::vector<Scalar> &&move_values() {
+      return std::move(m_values);
     }
 
     // イテレータ
@@ -146,7 +140,7 @@ namespace mywheels {
     friend Vector operator-(const Vector &l, Vector &&r) {
       assert(l.dim() == r.dim());
       std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::minus<Scalar>());
-      return std::move(r);
+      return r;
     }
 
     friend Vector operator-(Vector &&l, Vector &&r) {
@@ -173,7 +167,7 @@ namespace mywheels {
       for (auto &elm : r) {
         elm = l * elm;
       }
-      return std::move(r);
+      return r;
     }
 
     friend Vector operator/(const Vector &l, const Scalar &r) {
@@ -214,8 +208,11 @@ namespace mywheels {
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Vector &v) {
-      for (auto elm : v) {
-        os << elm << ' ';
+      for (std::size_t i = 0; i < v.dim(); i++) {
+        os << v(i);
+        if (i != v.dim() - 1) {
+          os << '\n';
+        }
       }
       return os;
     }
@@ -223,7 +220,7 @@ namespace mywheels {
     // 関数
 
     std::size_t dim() const {
-      return static_cast<std::size_t>(m_values.size());
+      return std::size_t(m_values.size());
     }
 
     friend std::size_t dim(const Vector &v) {
@@ -241,7 +238,7 @@ namespace mywheels {
 
     Vector cross(const Vector &r) const {
       assert(dim() == 3 && r.dim() == 3);
-      Vector ret(static_cast<std::size_t>(3));
+      Vector ret(std::size_t(3));
       ret(0) = (*this)(1) * r(2) - (*this)(2) * r(1);
       ret(1) = (*this)(2) * r(0) - (*this)(0) * r(2);
       ret(2) = (*this)(0) * r(1) - (*this)(1) * r(0);
@@ -277,12 +274,6 @@ namespace mywheels {
         return sum + pow(abs(val), P);
       });
       return pow(ret, Scalar(1) / static_cast<Scalar>(P));
-    }
-
-    friend Matrix<Scalar> t(const Vector &v) {
-      Matrix<Scalar> ret(static_cast<std::size_t>(1), v.dim());
-      std::copy(v.begin(), v.end(), ret.begin());
-      return ret;
     }
 
     Vector concatenate(const Vector &r) const & {
@@ -341,6 +332,19 @@ namespace mywheels {
         std::move(begin() + n, end(), ret.begin());
         return ret;
       }
+    }
+
+    template<typename Func>
+    Vector apply(Func func) const & {
+      Vector result(dim());
+      std::transform(begin(), end(), result.begin(), func);
+      return result;
+    }
+
+    template<typename Func>
+    Vector apply(Func func) && {
+      std::transform(begin(), end(), begin(), func);
+      return *this;
     }
 
     // 定数

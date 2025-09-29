@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <numeric>
 #include <cassert>
-#include "math/Function.hpp"
 #include "math/Vector.hpp"
+#include "math/Function.hpp"
 
 namespace mywheels {
   template<typename Scalar>
@@ -31,11 +31,41 @@ namespace mywheels {
       assert(list.size() % cols == 0);
     };
 
+    Matrix(const Vector<Scalar> &v) : m_rows(v.dim()), m_cols(std::size_t(1)), m_values(v.begin(), v.end()) {};
+
+    Matrix(Vector<Scalar> &&v) : m_rows(v.dim()), m_cols(std::size_t(1)), m_values(v.move_values()) {};
+
+    Matrix(const Vector<Scalar> &v, std::size_t cols) :
+      m_rows(v.dim() / cols), m_cols(cols), m_values(v.begin(), v.end()) {
+      assert(v.dim() % cols == 0);
+    };
+
+    Matrix(Vector<Scalar> &&v, std::size_t cols) : m_rows(v.dim() / cols), m_cols(cols), m_values(v.move_values()) {
+      assert(v.dim() % cols == 0);
+    };
+
+    Matrix(const Matrix &m, std::size_t cols) :
+      m_rows(m.m_rows * m.m_cols / cols), m_cols(cols), m_values(m.begin(), m.end()) {
+      assert(m.m_rows * m.m_cols % cols == 0);
+    }
+
+    Matrix(Matrix &&m, std::size_t cols) :
+      m_rows(m.m_rows * m.m_cols / cols), m_cols(cols), m_values(std::move(m.m_values)) {
+      assert(m.m_rows * m.m_cols % cols == 0);
+    }
+
     // 型変換
-    operator Vector<Scalar>() const {
+    explicit operator Vector<Scalar>() const & {
       assert(m_cols == 1);
       Vector<Scalar> ret(m_rows);
       std::copy(begin(), end(), ret.begin());
+      return ret;
+    }
+
+    explicit operator Vector<Scalar>() && {
+      assert(m_cols == 1);
+      Vector<Scalar> ret(m_rows);
+      std::move(begin(), end(), ret.begin());
       return ret;
     }
 
@@ -167,7 +197,7 @@ namespace mywheels {
     friend Matrix operator-(const Matrix &l, Matrix &&r) {
       assert(l.dim() == r.dim());
       std::transform(l.begin(), l.end(), r.begin(), r.begin(), std::minus());
-      return std::move(r);
+      return r;
     }
 
     friend Matrix operator-(Matrix &&l, Matrix &&r) {
@@ -194,7 +224,7 @@ namespace mywheels {
       for (auto &elm : r) {
         elm = l * elm;
       }
-      return std::move(r);
+      return r;
     }
 
     friend Matrix operator*(const Matrix &l, const Matrix &r) {
@@ -301,6 +331,12 @@ namespace mywheels {
           ret(j, i) = mat(i, j);
         }
       }
+      return ret;
+    }
+
+    friend Matrix<Scalar> t(const Vector<Scalar> &v) {
+      Matrix<Scalar> ret(std::size_t(1), v.dim());
+      std::copy(v.begin(), v.end(), ret.begin());
       return ret;
     }
 
@@ -462,7 +498,6 @@ namespace mywheels {
     }
 
     Matrix block(std::size_t n, std::size_t m, std::size_t idx) && {
-      std::cout << "hoge" << std::endl;
       assert(n <= m_rows && m <= m_cols);
       assert(idx == 0 || idx == 1 || idx == 2 || idx == 3);
       if (idx == 0) {
@@ -498,6 +533,19 @@ namespace mywheels {
         }
         return ret;
       }
+    }
+
+    template<typename Func>
+    Matrix apply(Func func) const & {
+      Matrix result(m_rows, m_cols);
+      std::transform(begin(), end(), result.begin(), func);
+      return result;
+    }
+
+    template<typename Func>
+    Matrix apply(Func func) && {
+      std::transform(begin(), end(), begin(), func);
+      return *this;
     }
 
     // 定数

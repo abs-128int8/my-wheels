@@ -21,6 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 add_executable(deep_learning
   src/Main.cpp
   src/SimplePerceptron.cpp
+  src/Function.cpp
 )
 
 target_include_directories(deep_learning PUBLIC

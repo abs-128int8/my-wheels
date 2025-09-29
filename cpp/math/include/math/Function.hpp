@@ -1,33 +1,29 @@
 #pragma once
 
+#include <cmath>
+
 namespace mywheels {
-  float sqrt(float x);
-  double sqrt(double x);
-
-  float pow(float x, float y);
-  double pow(double x, double y);
-
-  float abs(float x);
-  double abs(double x);
-
-  float exp(float x);
-  double exp(double x);
-
   template<typename T>
-  T sigmoid(T x) {
-    return 1 / (1 + exp(-x));
+  auto abs(const T &x) {
+    using std::abs;
+    return abs(x);
   }
 
   template<typename T>
-  T step(T x) {
-    return (x > 0) ? T(1) : T(0);
+  auto sqrt(const T &x) {
+    using std::sqrt;
+    return sqrt(x);
   }
 
   template<typename T>
-  T lamp(T x) {
-    return (x > 0) ? x : T(0);
+  auto pow(const T &x, const T &y) {
+    using std::pow;
+    return pow(x, y);
   }
 
   template<typename T>
-  T (*relu)(T) = lamp;
+  auto exp(const T &x) {
+    using std::exp;
+    return exp(x);
+  }
 } // namespace mywheels
