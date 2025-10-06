@@ -347,6 +347,18 @@ namespace mywheels {
       return *this;
     }
 
+    Scalar max() {
+      return *std::max_element(begin(), end());
+    }
+
+    Scalar min() {
+      return *std::min_element(begin(), end());
+    }
+
+    Scalar sum() {
+      return std::accumulate(begin(), end(), Scalar(0));
+    }
+
     // 定数
 
     static Vector zero(std::size_t dim) {

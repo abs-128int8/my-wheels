@@ -7,16 +7,13 @@ namespace mywheels {
   }
 
   Vecf softmax(Vecf v) {
-    float max = *std::max_element(v.begin(), v.end());
-    float sum = std::accumulate(v.begin(), v.end(), 0.0f, [max](float acc, float x) {
-      return acc + exp(x - max);
-    });
-    return std::move(v)
-             .apply([max](float x) {
-               return x - max;
-             })
-             .apply(exp<float>)
-           / sum;
+    float max = v.max();
+    v = std::move(v)
+          .apply([max](float x) {
+            return x - max;
+          })
+          .apply(exp<float>);
+    return v / v.sum();
   }
 
   Matf softmax(Matf m) {
