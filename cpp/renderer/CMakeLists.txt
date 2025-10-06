@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyWheelsDeepLearning VERSION 0.1.0.1 LANGUAGES CXX)
+project(MyWheelsRenderer VERSION 0.1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -18,13 +18,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
-add_executable(deep_learning
-  src/Main.cpp
-  src/SimplePerceptron.cpp
-  src/Function.cpp
-)
+add_executable(renderer
+  )
 
-target_include_directories(deep_learning PUBLIC
+target_include_directories(renderer PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -45,9 +42,9 @@ else ()
   )
 endif ()
 
-target_link_libraries(deep_learning PRIVATE mathlib)
+target_link_libraries(renderer PRIVATE mathlib)
 
-target_compile_options(deep_learning PRIVATE
+target_compile_options(renderer PRIVATE
   # Clang
   $<$<CXX_COMPILER_ID:Clang>: -Wall -Wextra -pedantic -march=native>
   # Clang, Debug

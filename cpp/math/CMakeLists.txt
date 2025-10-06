@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyWheelsMath VERSION 0.1.0.0 LANGUAGES CXX)
+project(MyWheelsMath VERSION 0.1.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -18,14 +18,14 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
-add_library(math STATIC 
+add_library(mathlib STATIC 
 )
 
-target_include_directories(math PUBLIC
+target_include_directories(mathlib PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(math PRIVATE
+target_compile_options(mathlib PRIVATE
   # Clang
   $<$<CXX_COMPILER_ID:Clang>: -Wall -Wextra -pedantic -march=native>
   # Clang, Debug
