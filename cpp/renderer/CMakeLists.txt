@@ -18,8 +18,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
-add_executable(renderer
-  )
+add_executable(renderer 
+  src/Main.cpp 
+  src/tgaimage.cpp
+)
 
 target_include_directories(renderer PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
