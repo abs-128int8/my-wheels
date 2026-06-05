@@ -3,7 +3,11 @@
 
 namespace mywheels {
   float sigmoid(float x) {
-    return 1 / (1 + exp(-x));
+    if (x >= 0.0f) {
+      return 1.0f / (1.0f + exp(-x));
+    } else {
+      return exp(x) / (1.0f + exp(x));
+    }
   }
 
   Vecf softmax(Vecf v) {
