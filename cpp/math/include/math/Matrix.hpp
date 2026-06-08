@@ -6,7 +6,6 @@
 #include <numeric>
 #include <cassert>
 #include "math/Vector.hpp"
-#include "math/Function.hpp"
 
 namespace mywheels {
   template<typename Scalar>
