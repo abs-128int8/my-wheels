@@ -1,8 +1,8 @@
-#include "mcje/SocketClient.hpp"
 #include <string.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <stdexcept>
+#include "mcje/SocketClient.hpp"
 
 namespace mywheels {
   SocketClient::SocketClient(const char *nodeName, const char *serviceName, int socketType) {

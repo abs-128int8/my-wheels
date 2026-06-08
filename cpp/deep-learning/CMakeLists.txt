@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyWheelsRenderer VERSION 0.1.0.0 LANGUAGES CXX)
+project(MyWheelsDeepLearning VERSION 0.1.0.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -17,12 +17,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
-add_executable(renderer 
-  src/Main.cpp 
-  src/tgaimage.cpp
+add_executable(deeplearning
+  src/Main.cpp
+  src/SimplePerceptron.cpp
+  src/Function.cpp
 )
 
-target_include_directories(renderer PUBLIC
+target_include_directories(deeplearning PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -37,9 +38,9 @@ set_target_properties(mywheelsmath PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${MY_WHEELS_MATH_DIR}/include"
 )
 
-target_link_libraries(renderer PRIVATE mywheelsmath)
+target_link_libraries(deeplearning PRIVATE mywheelsmath)
 
-target_compile_options(renderer PRIVATE
+target_compile_options(deeplearning PRIVATE
   $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
   $<$<CONFIG:Release>: -O3 -march=native>
 )

@@ -8,6 +8,8 @@
 namespace mywheels {
   class BigInt {
   private:
+    static constexpr int32_t BASE = 1000000000; // 10^9
+
     int m_sign;
     std::vector<uint32_t> m_digits;
 

@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/debug")
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -15,14 +17,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
-add_library(mathlib STATIC 
+add_library(mywheelsmath STATIC
+  src/BigInt.cpp
 )
 
-target_include_directories(mathlib PUBLIC
+set_target_properties(mywheelsmath PROPERTIES
+  PREFIX "")
+
+target_include_directories(mywheelsmath PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(mathlib PRIVATE
+target_compile_options(mywheelsmath PRIVATE
   $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
   $<$<CONFIG:Release>: -O3>
 )
