@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include "deep_learning/Function.hpp"
 #include "deep_learning/SimplePerceptron.hpp"
 #include "math/Matrix.hpp"
 
@@ -9,8 +11,11 @@ int main(int argc, char *argv[]) {
   if (argc == 1) {
     cout << "Usage: " << argv[0] << " <run_number> \n";
     cout << "\n";
-    cout << "run_number";
-    cout << "   1: SimplePerceptron\n";
+    cout << "run_number\n";
+    cout << "   1: Chapter2: SimplePerceptron\n";
+    cout << "   2: Chapter3: NeuralNetwork\n";
+    cout << "\n";
+    cout << "Ref. Oreily Deep Learning from Scratch\n";
     return 0;
   }
   if (argc != 2) {
@@ -19,7 +24,9 @@ int main(int argc, char *argv[]) {
 
   int arg = std::atoi(argv[1]);
   switch (arg) {
-  case 1:
+  case 1: {
+    cout << "1. Chapter2: SimplePerceptron\n\n";
+
     auto p = SimplePerceptron({0.5f, 0.5f}, -0.7f);
     cout << "SimplePerceptron\n";
     cout << p({0, 0}) << ' ' << p({0, 1}) << ' ' << p({1, 0}) << ' ' << p({1, 1}) << '\n';
@@ -35,6 +42,40 @@ int main(int argc, char *argv[]) {
     cout << "XOR Gate\n";
     cout << SimplePerceptron::XOR({0, 0}) << ' ' << SimplePerceptron::XOR({0, 1}) << ' '
          << SimplePerceptron::XOR({1, 0}) << ' ' << SimplePerceptron::XOR({1, 1}) << '\n';
+    break;
+  }
+  case 2: {
+    cout << "2. Chapter3: NeuralNetwork\n\n";
+    cout << "3LNN forwarding\n";
+    Vecf x({1.0, 0.5});
+    Matf W1({0.1, 0.2, 0.3, 0.4, 0.5, 0.6}, 2);
+    Vecf b1({0.1, 0.2, 0.3});
+    auto a1 = W1 * x + b1;
+    auto z1 = a1.apply(sigmoid);
+    Matf W2({0.1, 0.2, 0.3, 0.4, 0.5, 0.6}, 3);
+    Vecf b2({0.1, 0.2});
+    auto a2 = W2 * z1 + b2;
+    auto z2 = a2.apply(sigmoid);
+    Matf W3({0.1, 0.2, 0.3, 0.4}, 2);
+    Vecf b3({0.1, 0.2});
+    auto a3 = W3 * z2 + b3;
+    auto z3 = a3.apply(identity);
+    cout << z3 << '\n';
+
+    cout << '\n';
+
+    cout << "softmax test\n";
+    Vecf test({1010, 1000, 990});
+    cout << "test: \n";
+    cout << test << '\n';
+    cout << "softmax(test): \n";
+    cout << softmax(test) << '\n';
+
+    break;
+  }
+  case 3:
+    Matf a({1, 1, 1, 1});
+    cout << Matf(std::move(a), 2) << endl;
   }
 
   return 0;
