@@ -21,6 +21,7 @@ namespace mywheels {
     void writeVarInt(std::int32_t value);
     void writeString(std::string_view str);
     void writeUint16(std::uint16_t value);
+    void writeLong(std::int64_t value);
     const std::vector<std::uint8_t> &getPacket(int packetId);
   };
 } // namespace mywheels

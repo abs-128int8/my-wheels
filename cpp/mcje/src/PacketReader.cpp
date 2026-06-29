@@ -38,4 +38,15 @@ namespace mywheels {
     auto bytes = readBytes(length);
     return std::string(bytes.begin(), bytes.end());
   }
+
+  std::int64_t PacketReader::readLong() {
+    if (_readPosition + 8 > _buffer.size()) {
+      throw std::runtime_error("readLong() failed: read position exceeds buffer size");
+    }
+    std::int64_t value = 0;
+    for (int i = 0; i < 8; ++i) {
+      value |= static_cast<std::int64_t>(readByte()) << (8 * (7 - i));
+    }
+    return value;
+  }
 } // namespace mywheels

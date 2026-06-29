@@ -24,11 +24,15 @@ int main() {
   auto packet = packetWriter.getPacket(0);
   printHex(packet);
   socketClient.sendData(packet);
+
   packetWriter.clear();
+
+  // Status Request
   packet = packetWriter.getPacket(0);
   printHex(packet);
   socketClient.sendData(packet);
 
+  // Status Response
   std::vector<std::uint8_t> response;
   socketClient.receiveData(response);
   printHex(response);
@@ -39,6 +43,25 @@ int main() {
   std::cout << "Packet Length: " << packetLength << std::endl;
   std::cout << "Packet ID: " << packetId << std::endl;
   std::cout << "JSON Response: " << jsonResponse << std::endl;
+
+  // Ping Request
+  packetWriter.clear();
+  packetWriter.writeLong(0x000000000014dc4c);
+  packet = packetWriter.getPacket(1);
+  printHex(packet);
+  socketClient.sendData(packet);
+
+  // Ping Response
+  response.clear();
+  socketClient.receiveData(response);
+  printHex(response);
+  packetReader = PacketReader(response);
+  packetLength = packetReader.readVarInt();
+  packetId = packetReader.readVarInt();
+  auto pingResponse = packetReader.readLong();
+  std::cout << "Packet Length: " << packetLength << std::endl;
+  std::cout << "Packet ID: " << packetId << std::endl;
+  std::cout << "Ping Response: " << pingResponse << std::endl;
 
   return 0;
 }

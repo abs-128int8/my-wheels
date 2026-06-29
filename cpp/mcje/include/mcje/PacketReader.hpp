@@ -13,11 +13,13 @@ namespace mywheels {
     std::size_t _readPosition = 0;
 
   public:
-    PacketReader(const std::vector<std::uint8_t> &buffer) : _buffer(buffer) {
+    PacketReader(const std::vector<std::uint8_t> &buffer) : _buffer(buffer), _readPosition(0) {
     }
+
     std::uint8_t readByte();
     std::vector<std::uint8_t> readBytes(std::size_t length);
     std::int32_t readVarInt();
     std::string readString();
+    std::int64_t readLong();
   };
 } // namespace mywheels

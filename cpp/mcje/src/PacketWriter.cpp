@@ -38,6 +38,14 @@ namespace mywheels {
     write(std::vector<std::uint8_t>{static_cast<std::uint8_t>(value >> 8), static_cast<std::uint8_t>(value & 0xFF)});
   }
 
+  void PacketWriter::writeLong(std::int64_t value) {
+    write(std::vector<std::uint8_t>{
+      static_cast<std::uint8_t>((value >> 56) & 0xFF), static_cast<std::uint8_t>((value >> 48) & 0xFF),
+      static_cast<std::uint8_t>((value >> 40) & 0xFF), static_cast<std::uint8_t>((value >> 32) & 0xFF),
+      static_cast<std::uint8_t>((value >> 24) & 0xFF), static_cast<std::uint8_t>((value >> 16) & 0xFF),
+      static_cast<std::uint8_t>((value >> 8) & 0xFF), static_cast<std::uint8_t>(value & 0xFF)});
+  }
+
   const std::vector<std::uint8_t> &PacketWriter::getPacket(int packetId) {
     writeFront(varInt(packetId));
     writeFront(varInt(_buffer.size()));
