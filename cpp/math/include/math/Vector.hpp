@@ -11,47 +11,47 @@ namespace mywheels {
   template<typename Scalar>
   class Vector {
   private:
-    std::vector<Scalar> m_values;
+    std::vector<Scalar> _values;
 
   public:
     // 初期化
 
-    explicit Vector(std::size_t dim) : m_values(dim) {};
+    explicit Vector(std::size_t dim) : _values(dim) {};
 
-    Vector(std::size_t dim, Scalar val) : m_values(dim, val) {};
+    Vector(std::size_t dim, Scalar val) : _values(dim, val) {};
 
-    Vector(std::initializer_list<Scalar> list) : m_values(list) {};
+    Vector(std::initializer_list<Scalar> list) : _values(list) {};
 
     std::vector<Scalar> &&move_values() {
-      return std::move(m_values);
+      return std::move(_values);
     }
 
     // イテレータ
 
     auto begin() {
-      return m_values.begin();
+      return _values.begin();
     }
 
     auto end() {
-      return m_values.end();
+      return _values.end();
     }
 
     auto begin() const {
-      return m_values.begin();
+      return _values.begin();
     }
 
     auto end() const {
-      return m_values.end();
+      return _values.end();
     }
 
     // 演算子
 
     Scalar &operator()(std::size_t i) {
-      return m_values[i];
+      return _values[i];
     }
 
     const Scalar &operator()(std::size_t i) const {
-      return m_values[i];
+      return _values[i];
     }
 
     // 単項演算子
@@ -220,7 +220,7 @@ namespace mywheels {
     // 関数
 
     std::size_t dim() const {
-      return std::size_t(m_values.size());
+      return std::size_t(_values.size());
     }
 
     friend std::size_t dim(const Vector &v) {

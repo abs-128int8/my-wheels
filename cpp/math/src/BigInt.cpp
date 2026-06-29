@@ -1,21 +1,30 @@
 #include "math/BigInt.hpp"
 
+#include <stdexcept>
+
 namespace mywheels {
-  BigInt::BigInt(int32_t n) {
-    if (n == 0) {
-      m_sign = 0;
-    } else if (n < 0) {
+  BigInt::BigInt(std::string_view s) {
+    auto it = s.begin();
+    switch (*it) {
+    case '+':
+      m_sign = 1;
+      ++it;
+      break;
+    case '-':
       m_sign = -1;
-      n = -n;
-    } else {
+      ++it;
+      break;
+    default:
       m_sign = 1;
     }
 
-    if (n < BASE) {
-      m_digits.push_back(static_cast<uint32_t>(n));
-    } else {
-      m_digits.push_back(static_cast<uint32_t>(n % BASE));
-      m_digits.push_back(static_cast<uint32_t>(n / BASE));
+    for (auto end = s.end(); it > end;) {
+      for (int i = 0; i < 9; i++) {
+      }
     }
+  }
+
+  std::string BigInt::toString() const {
+    return {};
   }
 } // namespace mywheels
