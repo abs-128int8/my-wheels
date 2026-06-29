@@ -3,6 +3,9 @@
 #include <iomanip>
 #include "mcje/SocketClient.hpp"
 #include "mcje/PacketWriter.hpp"
+#include "mcje/PacketReader.hpp"
+
+using namespace mywheels;
 
 void printHex(const std::vector<std::uint8_t> &data) {
   for (std::uint8_t byte : data) {
@@ -12,8 +15,8 @@ void printHex(const std::vector<std::uint8_t> &data) {
 }
 
 int main() {
-  mywheels::SocketClient socketClient("raspberrypi.local", "25565", SOCK_STREAM);
-  mywheels::PacketWriter packetWriter;
+  SocketClient socketClient("raspberrypi.local", "25565", SOCK_STREAM);
+  PacketWriter packetWriter;
   packetWriter.writeVarInt(775);
   packetWriter.writeString("raspberrypi.local");
   packetWriter.writeUint16(25565);
@@ -29,5 +32,13 @@ int main() {
   std::vector<std::uint8_t> response;
   socketClient.receiveData(response);
   printHex(response);
+  PacketReader packetReader(response);
+  auto packetLength = packetReader.readVarInt();
+  auto packetId = packetReader.readVarInt();
+  auto jsonResponse = packetReader.readString();
+  std::cout << "Packet Length: " << packetLength << std::endl;
+  std::cout << "Packet ID: " << packetId << std::endl;
+  std::cout << "JSON Response: " << jsonResponse << std::endl;
+
   return 0;
 }

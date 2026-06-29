@@ -19,7 +19,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
 add_library(mywheelsmcje STATIC
   src/SocketClient.cpp
-  src/PacketWriter.cpp)
+  src/PacketWriter.cpp
+  src/PacketReader.cpp)
 
 set_target_properties(mywheelsmcje PROPERTIES
   PREFIX "")

@@ -9,7 +9,7 @@ namespace mywheels {
   private:
     static constexpr std::uint32_t SEGMENT_BITS = 0x7F;
     static constexpr std::uint32_t CONTINUE_BIT = 0x80;
-    std::vector<std::uint8_t> m_buffer;
+    std::vector<std::uint8_t> _buffer;
 
   public:
     void clear();

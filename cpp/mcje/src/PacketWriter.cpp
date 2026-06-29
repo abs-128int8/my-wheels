@@ -2,15 +2,15 @@
 
 namespace mywheels {
   void PacketWriter::clear() {
-    m_buffer.clear();
+    _buffer.clear();
   }
 
   void PacketWriter::write(std::vector<std::uint8_t> data) {
-    m_buffer.insert(m_buffer.end(), data.begin(), data.end());
+    _buffer.insert(_buffer.end(), data.begin(), data.end());
   }
 
   void PacketWriter::writeFront(std::vector<std::uint8_t> data) {
-    m_buffer.insert(m_buffer.begin(), data.begin(), data.end());
+    _buffer.insert(_buffer.begin(), data.begin(), data.end());
   }
 
   std::vector<std::uint8_t> PacketWriter::varInt(std::int32_t value) {
@@ -40,7 +40,7 @@ namespace mywheels {
 
   const std::vector<std::uint8_t> &PacketWriter::getPacket(int packetId) {
     writeFront(varInt(packetId));
-    writeFront(varInt(m_buffer.size()));
-    return m_buffer;
+    writeFront(varInt(_buffer.size()));
+    return _buffer;
   }
 } // namespace mywheels
