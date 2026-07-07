@@ -34,12 +34,22 @@ target_compile_options(mywheelsmctools PRIVATE
   $<$<CONFIG:Release>: -O3 -march=native>
 )
 
-add_executable(mcje_status_ping
+add_executable(mctools_status_ping
   samples/StatusPing.cpp)
 
-target_link_libraries(mcje_status_ping PRIVATE mywheelsmctools)
+target_link_libraries(mctools_status_ping PRIVATE mywheelsmctools)
 
-target_compile_options(mcje_status_ping PRIVATE
+target_compile_options(mctools_status_ping PRIVATE
+  $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
+  $<$<CONFIG:Release>: -O3 -march=native>
+)
+
+add_executable(mctools_query
+  samples/Query.cpp)
+
+target_link_libraries(mctools_query PRIVATE mywheelsmctools)
+
+target_compile_options(mctools_query PRIVATE
   $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
   $<$<CONFIG:Release>: -O3 -march=native>
 )

@@ -1,4 +1,4 @@
-#include "mcje/PacketWriter.hpp"
+#include "mctools/PacketWriter.hpp"
 
 namespace mywheels {
   void PacketWriter::clear() {
@@ -34,11 +34,33 @@ namespace mywheels {
     write(std::vector<std::uint8_t>(str.begin(), str.end()));
   }
 
+  void PacketWriter::writeUint8(std::uint8_t value) {
+    write(std::vector<std::uint8_t>{value});
+  }
+
+  void PacketWriter::writeInt8(std::int8_t value) {
+    write(std::vector<std::uint8_t>{static_cast<std::uint8_t>(value)});
+  }
+
   void PacketWriter::writeUint16(std::uint16_t value) {
     write(std::vector<std::uint8_t>{static_cast<std::uint8_t>(value >> 8), static_cast<std::uint8_t>(value & 0xFF)});
   }
 
-  void PacketWriter::writeLong(std::int64_t value) {
+  void PacketWriter::writeInt16(std::int16_t value) {
+    writeUint16(static_cast<std::uint16_t>(value));
+  }
+
+  void PacketWriter::writeUint32(std::uint32_t value) {
+    write(std::vector<std::uint8_t>{
+      static_cast<std::uint8_t>(value >> 24), static_cast<std::uint8_t>((value >> 16) & 0xFF),
+      static_cast<std::uint8_t>((value >> 8) & 0xFF), static_cast<std::uint8_t>(value & 0xFF)});
+  }
+
+  void PacketWriter::writeInt32(std::int32_t value) {
+    writeUint32(static_cast<std::uint32_t>(value));
+  }
+
+  void PacketWriter::writeUint64(std::uint64_t value) {
     write(std::vector<std::uint8_t>{
       static_cast<std::uint8_t>((value >> 56) & 0xFF), static_cast<std::uint8_t>((value >> 48) & 0xFF),
       static_cast<std::uint8_t>((value >> 40) & 0xFF), static_cast<std::uint8_t>((value >> 32) & 0xFF),
@@ -46,9 +68,15 @@ namespace mywheels {
       static_cast<std::uint8_t>((value >> 8) & 0xFF), static_cast<std::uint8_t>(value & 0xFF)});
   }
 
+  void PacketWriter::writeInt64(std::int64_t value) {
+    writeUint64(static_cast<std::uint64_t>(value));
+  }
+
   const std::vector<std::uint8_t> &PacketWriter::getPacket(int packetId) {
-    writeFront(varInt(packetId));
-    writeFront(varInt(_buffer.size()));
+    if (_packetType == SOCK_STREAM) {
+      writeFront(varInt(packetId));
+      writeFront(varInt(_buffer.size()));
+    }
     return _buffer;
   }
 } // namespace mywheels
