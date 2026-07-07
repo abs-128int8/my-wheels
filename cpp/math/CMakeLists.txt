@@ -32,3 +32,23 @@ target_compile_options(mywheelsmath PRIVATE
   $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
   $<$<CONFIG:Release>: -O3>
 )
+
+add_executable(sample_sample
+  samples/Sample.cpp)
+
+target_link_libraries(sample_sample PRIVATE mywheelsmath)
+
+target_compile_options(sample_sample PRIVATE
+  $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
+  $<$<CONFIG:Release>: -O3>
+)
+
+add_executable(test_bigint
+  tests/BigInt.cpp)
+
+target_link_libraries(test_bigint PRIVATE mywheelsmath)
+
+target_compile_options(test_bigint PRIVATE
+  $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
+  $<$<CONFIG:Release>: -O3>
+)

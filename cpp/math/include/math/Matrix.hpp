@@ -11,59 +11,58 @@ namespace mywheels {
   template<typename Scalar>
   class Matrix {
   private:
-    std::vector<Scalar> m_values;
-    std::size_t m_rows;
-    std::size_t m_cols;
+    std::vector<Scalar> _values;
+    std::size_t _rows;
+    std::size_t _cols;
 
   public:
     // 初期化
-    explicit Matrix(std::size_t dim) : m_values(dim * dim), m_rows(dim), m_cols(dim) {};
+    explicit Matrix(std::size_t dim) : _values(dim * dim), _rows(dim), _cols(dim) {};
 
-    Matrix(std::size_t rows, std::size_t cols) : m_values(rows * cols), m_rows(rows), m_cols(cols) {};
+    Matrix(std::size_t rows, std::size_t cols) : _values(rows * cols), _rows(rows), _cols(cols) {};
 
-    Matrix(std::size_t dim, Scalar val) : m_values(dim * dim, val), m_rows(dim), m_cols(dim) {};
+    Matrix(std::size_t dim, Scalar val) : _values(dim * dim, val), _rows(dim), _cols(dim) {};
 
-    Matrix(std::size_t rows, std::size_t cols, Scalar val) : m_values(rows * cols, val), m_rows(rows), m_cols(cols) {};
+    Matrix(std::size_t rows, std::size_t cols, Scalar val) : _values(rows * cols, val), _rows(rows), _cols(cols) {};
 
     Matrix(std::initializer_list<Scalar> list, std::size_t cols = 1) :
-      m_values(list), m_rows(list.size() / cols), m_cols(cols) {
+      _values(list), _rows(list.size() / cols), _cols(cols) {
       assert(list.size() % cols == 0);
     };
 
-    Matrix(const Vector<Scalar> &v) : m_rows(v.dim()), m_cols(std::size_t(1)), m_values(v.begin(), v.end()) {};
+    Matrix(const Vector<Scalar> &v) : _rows(v.dim()), _cols(std::size_t(1)), _values(v.begin(), v.end()) {};
 
-    Matrix(Vector<Scalar> &&v) : m_rows(v.dim()), m_cols(std::size_t(1)), m_values(v.move_values()) {};
+    Matrix(Vector<Scalar> &&v) : _rows(v.dim()), _cols(std::size_t(1)), _values(v.move_values()) {};
 
     Matrix(const Vector<Scalar> &v, std::size_t cols) :
-      m_rows(v.dim() / cols), m_cols(cols), m_values(v.begin(), v.end()) {
+      _rows(v.dim() / cols), _cols(cols), _values(v.begin(), v.end()) {
       assert(v.dim() % cols == 0);
     };
 
-    Matrix(Vector<Scalar> &&v, std::size_t cols) : m_rows(v.dim() / cols), m_cols(cols), m_values(v.move_values()) {
+    Matrix(Vector<Scalar> &&v, std::size_t cols) : _rows(v.dim() / cols), _cols(cols), _values(v.move_values()) {
       assert(v.dim() % cols == 0);
     };
 
     Matrix(const Matrix &m, std::size_t cols) :
-      m_rows(m.m_rows * m.m_cols / cols), m_cols(cols), m_values(m.begin(), m.end()) {
-      assert(m.m_rows * m.m_cols % cols == 0);
+      _rows(m._rows * m._cols / cols), _cols(cols), _values(m.begin(), m.end()) {
+      assert(m._rows * m._cols % cols == 0);
     }
 
-    Matrix(Matrix &&m, std::size_t cols) :
-      m_rows(m.m_rows * m.m_cols / cols), m_cols(cols), m_values(std::move(m.m_values)) {
-      assert(m.m_rows * m.m_cols % cols == 0);
+    Matrix(Matrix &&m, std::size_t cols) : _rows(m._rows * m._cols / cols), _cols(cols), _values(std::move(m._values)) {
+      assert(m._rows * m._cols % cols == 0);
     }
 
     // 型変換
     explicit operator Vector<Scalar>() const & {
-      assert(m_cols == 1);
-      Vector<Scalar> ret(m_rows);
+      assert(_cols == 1);
+      Vector<Scalar> ret(_rows);
       std::copy(begin(), end(), ret.begin());
       return ret;
     }
 
     explicit operator Vector<Scalar>() && {
-      assert(m_cols == 1);
-      Vector<Scalar> ret(m_rows);
+      assert(_cols == 1);
+      Vector<Scalar> ret(_rows);
       std::move(begin(), end(), ret.begin());
       return ret;
     }
@@ -71,29 +70,29 @@ namespace mywheels {
     // イテレータ
 
     auto begin() {
-      return m_values.begin();
+      return _values.begin();
     }
 
     auto end() {
-      return m_values.end();
+      return _values.end();
     }
 
     auto begin() const {
-      return m_values.begin();
+      return _values.begin();
     }
 
     auto end() const {
-      return m_values.end();
+      return _values.end();
     }
 
     // 演算子
 
     Scalar &operator()(std::size_t i, std::size_t j) {
-      return m_values[i * m_cols + j];
+      return _values[i * _cols + j];
     }
 
     const Scalar &operator()(std::size_t i, std::size_t j) const {
-      return m_values[i * m_cols + j];
+      return _values[i * _cols + j];
     }
 
     // 単項演算子
@@ -138,11 +137,11 @@ namespace mywheels {
     }
 
     Matrix &operator*=(const Matrix &r) {
-      assert(m_cols == r.m_rows);
-      Matrix ret = Matrix::zero(m_rows, r.m_cols);
-      for (std::size_t i = 0; i < m_rows; i++) {
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          for (std::size_t k = 0; k < m_cols; k++) {
+      assert(_cols == r._rows);
+      Matrix ret = Matrix::zero(_rows, r._cols);
+      for (std::size_t i = 0; i < _rows; i++) {
+        for (std::size_t j = 0; j < r._cols; j++) {
+          for (std::size_t k = 0; k < _cols; k++) {
             ret(i, j) += (*this)(i, k) * r(k, j);
           }
         }
@@ -235,11 +234,11 @@ namespace mywheels {
     }
 
     friend Matrix operator*(const Matrix &l, Matrix &&r) {
-      assert(l.m_cols == r.m_rows);
-      Matrix ret = Matrix::zero(l.m_rows, r.m_cols);
-      for (std::size_t i = 0; i < l.m_rows; i++) {
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          for (std::size_t k = 0; k < l.m_cols; k++) {
+      assert(l._cols == r._rows);
+      Matrix ret = Matrix::zero(l._rows, r._cols);
+      for (std::size_t i = 0; i < l._rows; i++) {
+        for (std::size_t j = 0; j < r._cols; j++) {
+          for (std::size_t k = 0; k < l._cols; k++) {
             ret(i, j) += l(i, k) * r(k, j);
           }
         }
@@ -290,12 +289,12 @@ namespace mywheels {
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &v) {
-      for (std::size_t i = 0; i < v.m_rows; i++) {
-        for (std::size_t j = 0; j < v.m_cols; j++) {
+      for (std::size_t i = 0; i < v._rows; i++) {
+        for (std::size_t j = 0; j < v._cols; j++) {
           os << v(i, j);
-          if (i != v.m_rows - 1 && j == v.m_cols - 1) {
+          if (i != v._rows - 1 && j == v._cols - 1) {
             os << '\n';
-          } else if (j != v.m_cols - 1) {
+          } else if (j != v._cols - 1) {
             os << ' ';
           }
         }
@@ -306,13 +305,13 @@ namespace mywheels {
     // 関数
 
     std::pair<std::size_t, std::size_t> dim() const {
-      return {m_rows, m_cols};
+      return {_rows, _cols};
     }
 
     Matrix transpose() {
-      if (m_rows == m_cols) {
-        for (std::size_t i = 0; i < m_rows; i++) {
-          for (std::size_t j = i + 1; j < m_cols; j++) {
+      if (_rows == _cols) {
+        for (std::size_t i = 0; i < _rows; i++) {
+          for (std::size_t j = i + 1; j < _cols; j++) {
             std::swap((*this)(i, j), (*this)(j, i));
           }
         }
@@ -324,9 +323,9 @@ namespace mywheels {
     }
 
     friend Matrix t(const Matrix &mat) {
-      Matrix ret(mat.m_cols, mat.m_rows);
-      for (std::size_t i = 0; i < mat.m_rows; i++) {
-        for (std::size_t j = 0; j < mat.m_cols; j++) {
+      Matrix ret(mat._cols, mat._rows);
+      for (std::size_t i = 0; i < mat._rows; i++) {
+        for (std::size_t j = 0; j < mat._cols; j++) {
           ret(j, i) = mat(i, j);
         }
       }
@@ -340,115 +339,115 @@ namespace mywheels {
     }
 
     friend Scalar tr(const Matrix &mat) {
-      assert(mat.m_rows == mat.m_cols);
+      assert(mat._rows == mat._cols);
       Scalar ret = Scalar(0);
-      for (std::size_t i = 0; i < mat.m_rows; i++) {
+      for (std::size_t i = 0; i < mat._rows; i++) {
         ret += mat(i, i);
       }
       return ret;
     }
 
     Matrix row(std::size_t ix) const {
-      assert(ix < m_rows);
-      Matrix ret(std::size_t(1), m_cols);
-      for (std::size_t j = 0; j < m_cols; j++) {
+      assert(ix < _rows);
+      Matrix ret(std::size_t(1), _cols);
+      for (std::size_t j = 0; j < _cols; j++) {
         ret(0, j) = (*this)(ix, j);
       }
       return ret;
     }
 
     Matrix col(std::size_t xj) const {
-      assert(xj < m_cols);
-      Matrix ret(m_rows, std::size_t(1));
-      for (std::size_t i = 0; i < m_rows; i++) {
+      assert(xj < _cols);
+      Matrix ret(_rows, std::size_t(1));
+      for (std::size_t i = 0; i < _rows; i++) {
         ret(i, 0) = (*this)(i, xj);
       }
       return ret;
     }
 
     Matrix concatenateRows(const Matrix &r) const & {
-      assert(m_cols == r.m_cols);
-      Matrix ret(m_rows + r.m_rows, m_cols);
+      assert(_cols == r._cols);
+      Matrix ret(_rows + r._rows, _cols);
       std::copy(begin(), end(), ret.begin());
-      std::copy(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      std::copy(r.begin(), r.end(), ret.begin() + _rows * _cols);
       return ret;
     }
 
     Matrix concatenateRows(Matrix &&r) const & {
-      assert(m_cols == r.m_cols);
-      Matrix ret(m_rows + r.m_rows, m_cols);
+      assert(_cols == r._cols);
+      Matrix ret(_rows + r._rows, _cols);
       std::copy(begin(), end(), ret.begin());
-      std::move(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      std::move(r.begin(), r.end(), ret.begin() + _rows * _cols);
       return ret;
     }
 
     Matrix concatenateRows(const Matrix &r) && {
-      assert(m_cols == r.m_cols);
-      Matrix ret(m_rows + r.m_rows, m_cols);
+      assert(_cols == r._cols);
+      Matrix ret(_rows + r._rows, _cols);
       std::move(begin(), end(), ret.begin());
-      std::copy(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      std::copy(r.begin(), r.end(), ret.begin() + _rows * _cols);
       return ret;
     }
 
     Matrix concatenateRows(Matrix &&r) && {
-      assert(m_cols == r.m_cols);
-      Matrix ret(m_rows + r.m_rows, m_cols);
+      assert(_cols == r._cols);
+      Matrix ret(_rows + r._rows, _cols);
       std::move(begin(), end(), ret.begin());
-      std::move(r.begin(), r.end(), ret.begin() + m_rows * m_cols);
+      std::move(r.begin(), r.end(), ret.begin() + _rows * _cols);
       return ret;
     }
 
     Matrix concatenateCols(const Matrix &r) const & {
-      assert(m_rows == r.m_rows);
-      Matrix ret(m_rows, m_cols + r.m_cols);
-      for (std::size_t i = 0; i < m_rows; i++) {
-        for (std::size_t j = 0; j < m_cols; j++) {
+      assert(_rows == r._rows);
+      Matrix ret(_rows, _cols + r._cols);
+      for (std::size_t i = 0; i < _rows; i++) {
+        for (std::size_t j = 0; j < _cols; j++) {
           ret(i, j) = (*this)(i, j);
         }
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          ret(i, m_cols + j) = r(i, j);
+        for (std::size_t j = 0; j < r._cols; j++) {
+          ret(i, _cols + j) = r(i, j);
         }
       }
       return ret;
     }
 
     Matrix concatenateCols(Matrix &&r) const & {
-      assert(m_rows == r.m_rows);
-      Matrix ret(m_rows, m_cols + r.m_cols);
-      for (std::size_t i = 0; i < m_rows; i++) {
-        for (std::size_t j = 0; j < m_cols; j++) {
+      assert(_rows == r._rows);
+      Matrix ret(_rows, _cols + r._cols);
+      for (std::size_t i = 0; i < _rows; i++) {
+        for (std::size_t j = 0; j < _cols; j++) {
           ret(i, j) = (*this)(i, j);
         }
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          ret(i, m_cols + j) = std::move(r(i, j));
+        for (std::size_t j = 0; j < r._cols; j++) {
+          ret(i, _cols + j) = std::move(r(i, j));
         }
       }
       return ret;
     }
 
     Matrix concatenateCols(const Matrix &r) && {
-      assert(m_rows == r.m_rows);
-      Matrix ret(m_rows, m_cols + r.m_cols);
-      for (std::size_t i = 0; i < m_rows; i++) {
-        for (std::size_t j = 0; j < m_cols; j++) {
+      assert(_rows == r._rows);
+      Matrix ret(_rows, _cols + r._cols);
+      for (std::size_t i = 0; i < _rows; i++) {
+        for (std::size_t j = 0; j < _cols; j++) {
           ret(i, j) = std::move((*this)(i, j));
         }
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          ret(i, m_cols + j) = r(i, j);
+        for (std::size_t j = 0; j < r._cols; j++) {
+          ret(i, _cols + j) = r(i, j);
         }
       }
       return ret;
     }
 
     Matrix concatenateCols(Matrix &&r) && {
-      assert(m_rows == r.m_rows);
-      Matrix ret(m_rows, m_cols + r.m_cols);
-      for (std::size_t i = 0; i < m_rows; i++) {
-        for (std::size_t j = 0; j < m_cols; j++) {
+      assert(_rows == r._rows);
+      Matrix ret(_rows, _cols + r._cols);
+      for (std::size_t i = 0; i < _rows; i++) {
+        for (std::size_t j = 0; j < _cols; j++) {
           ret(i, j) = std::move((*this)(i, j));
         }
-        for (std::size_t j = 0; j < r.m_cols; j++) {
-          ret(i, m_cols + j) = std::move(r(i, j));
+        for (std::size_t j = 0; j < r._cols; j++) {
+          ret(i, _cols + j) = std::move(r(i, j));
         }
       }
       return ret;
@@ -459,7 +458,7 @@ namespace mywheels {
     // idx=2の時，idx=0の下のブロックを取る
     // idx=3の時，idx=0の右下のブロックを取る
     Matrix block(std::size_t n, std::size_t m, std::size_t idx) const & {
-      assert(n <= m_rows && m <= m_cols);
+      assert(n <= _rows && m <= _cols);
       assert(idx == 0 || idx == 1 || idx == 2 || idx == 3);
       if (idx == 0) {
         Matrix ret(n, m);
@@ -470,25 +469,25 @@ namespace mywheels {
         }
         return ret;
       } else if (idx == 1) {
-        Matrix ret(n, m_cols - m);
+        Matrix ret(n, _cols - m);
         for (std::size_t i = 0; i < n; i++) {
-          for (std::size_t j = 0; j < m_cols - m; j++) {
+          for (std::size_t j = 0; j < _cols - m; j++) {
             ret(i, j) = (*this)(i, m + j);
           }
         }
         return ret;
       } else if (idx == 2) {
-        Matrix ret(m_rows - n, m);
-        for (std::size_t i = 0; i < m_rows - n; i++) {
+        Matrix ret(_rows - n, m);
+        for (std::size_t i = 0; i < _rows - n; i++) {
           for (std::size_t j = 0; j < m; j++) {
             ret(i, j) = (*this)(n + i, j);
           }
         }
         return ret;
       } else if (idx == 3) {
-        Matrix ret(m_rows - n, m_cols - m);
-        for (std::size_t i = 0; i < m_rows - n; i++) {
-          for (std::size_t j = 0; j < m_cols - m; j++) {
+        Matrix ret(_rows - n, _cols - m);
+        for (std::size_t i = 0; i < _rows - n; i++) {
+          for (std::size_t j = 0; j < _cols - m; j++) {
             ret(i, j) = (*this)(n + i, m + j);
           }
         }
@@ -497,7 +496,7 @@ namespace mywheels {
     }
 
     Matrix block(std::size_t n, std::size_t m, std::size_t idx) && {
-      assert(n <= m_rows && m <= m_cols);
+      assert(n <= _rows && m <= _cols);
       assert(idx == 0 || idx == 1 || idx == 2 || idx == 3);
       if (idx == 0) {
         Matrix ret(n, m);
@@ -508,25 +507,25 @@ namespace mywheels {
         }
         return ret;
       } else if (idx == 1) {
-        Matrix ret(n, m_cols - m);
+        Matrix ret(n, _cols - m);
         for (std::size_t i = 0; i < n; i++) {
-          for (std::size_t j = 0; j < m_cols - m; j++) {
+          for (std::size_t j = 0; j < _cols - m; j++) {
             ret(i, j) = std::move((*this)(i, m + j));
           }
         }
         return ret;
       } else if (idx == 2) {
-        Matrix ret(m_rows - n, m);
-        for (std::size_t i = 0; i < m_rows - n; i++) {
+        Matrix ret(_rows - n, m);
+        for (std::size_t i = 0; i < _rows - n; i++) {
           for (std::size_t j = 0; j < m; j++) {
             ret(i, j) = std::move((*this)(n + i, j));
           }
         }
         return ret;
       } else if (idx == 3) {
-        Matrix ret(m_rows - n, m_cols - m);
-        for (std::size_t i = 0; i < m_rows - n; i++) {
-          for (std::size_t j = 0; j < m_cols - m; j++) {
+        Matrix ret(_rows - n, _cols - m);
+        for (std::size_t i = 0; i < _rows - n; i++) {
+          for (std::size_t j = 0; j < _cols - m; j++) {
             ret(i, j) = std::move((*this)(n + i, m + j));
           }
         }
@@ -536,7 +535,7 @@ namespace mywheels {
 
     template<typename Func>
     Matrix apply(Func func) const & {
-      Matrix result(m_rows, m_cols);
+      Matrix result(_rows, _cols);
       std::transform(begin(), end(), result.begin(), func);
       return result;
     }
