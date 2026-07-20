@@ -20,7 +20,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 add_library(mywheelsmctools STATIC
   src/SocketClient.cpp
   src/PacketWriter.cpp
-  src/PacketReader.cpp)
+  src/PacketReader.cpp
+  src/UDPSocketClient.cpp)
 
 set_target_properties(mywheelsmctools PROPERTIES
   PREFIX "")
@@ -50,6 +51,16 @@ add_executable(mctools_query
 target_link_libraries(mctools_query PRIVATE mywheelsmctools)
 
 target_compile_options(mctools_query PRIVATE
+  $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
+  $<$<CONFIG:Release>: -O3 -march=native>
+)
+
+add_executable(mctools_test
+  samples/Test.cpp)
+
+target_link_libraries(mctools_test PRIVATE mywheelsmctools)
+
+target_compile_options(mctools_test PRIVATE
   $<$<CONFIG:Debug>: -Wall -Wextra -pedantic -O0 -g>
   $<$<CONFIG:Release>: -O3 -march=native>
 )

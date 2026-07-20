@@ -14,7 +14,7 @@ namespace mywheels {
     ssize_t receiveDataUdp(std::vector<std::uint8_t> &data);
 
   public:
-    SocketClient(std::string nodeName, std::string serviceName, int socketType);
+    SocketClient(const std::string &nodeName, const std::string &serviceName, int socketType);
     ~SocketClient();
 
     ssize_t sendData(const std::vector<std::uint8_t> &data);

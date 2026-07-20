@@ -4,9 +4,10 @@
 #include <stdexcept>
 #include "mctools/SocketClient.hpp"
 #include "mctools/PacketReader.hpp"
+#include "mctools/UDPSocketClient.hpp"
 
 namespace mywheels {
-  SocketClient::SocketClient(std::string nodeName, std::string serviceName, int socketType) {
+  SocketClient::SocketClient(const std::string &nodeName, const std::string &serviceName, int socketType) {
     if (socketType != SOCK_STREAM && socketType != SOCK_DGRAM) {
       throw std::invalid_argument("Invalid socket type. Use SOCK_STREAM or SOCK_DGRAM.");
     }
