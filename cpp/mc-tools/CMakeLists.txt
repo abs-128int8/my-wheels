@@ -21,7 +21,8 @@ add_library(mywheelsmctools STATIC
   src/SocketClient.cpp
   src/PacketWriter.cpp
   src/PacketReader.cpp
-  src/UDPSocketClient.cpp)
+  src/UDPSocketClient.cpp
+  src/Utils.cpp)
 
 set_target_properties(mywheelsmctools PROPERTIES
   PREFIX "")

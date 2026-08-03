@@ -6,6 +6,7 @@
 namespace mywheels {
   class Utils {
   public:
-    std::uint16_t calculateChecksum(const std::vector<std::uint8_t> &data);
+    static std::uint16_t calculateChecksum(const std::vector<std::uint8_t> &data);
+    static void printHex(const std::vector<std::uint8_t> &data);
   };
 } // namespace mywheels

@@ -9,7 +9,8 @@ namespace mywheels {
   class UDPSocketClient {
   private:
     int _socketFileDescriptor;
-    struct sockaddr_in _address;
+    struct sockaddr_in _localAddress;
+    struct sockaddr_in _remoteAddress;
 
   public:
     UDPSocketClient(const std::string &host, const std::string &port);
